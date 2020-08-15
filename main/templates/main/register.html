@@ -1,0 +1,288 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="rtl" style="font-family:&quot;B Nazanin&quot;;mso-bidi-language:FA" lang="fa">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Qbit - Registration</title>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <link href="{% static 'main/content/login/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'main/content/login/dist/css/sb-admin-2.css' %}" rel="stylesheet">
+    <style>
+    @font-face {
+      font-family: 'byekan';
+      src: url('/static/main/fonts/BYekan.ttf')  format("truetype"),
+           local('byekan');
+    }
+    html *
+    {
+       font-family: byekan !important;
+    }
+    </style>
+
+</head>
+
+<!-- Modal -->
+<div class="modal fade" id="RulesModal" tabindex="-1" role="dialog" aria-labelledby="RulesModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">
+            قوانین و حریم خصوصی در کیوبیت
+        </h5>
+      </div>
+      <div dir="rtl" class="modal-body text-right">
+                        <p>
+                            چند نکته:
+                        </p>
+                        <p>
+                            الف. نام کاربری و نام شما در سایت برای دیگران قابل رویت خواهند بود.
+                        </p>
+                        <p>
+                             ب. ایمیل شما تنها برای ارتباط شما با مدیران سایت و همچنین سیستم کیوبیت استفاده می شود. ایمیل شما برای هیچکس قابل رویت نخواهد بود.
+                        </p>
+                        <p>
+                             ج. در صورت عدم تمایل به وارد کردن محل تحصیل می توانید به جای فیلد مشخص شده ستاره وارد کنید.
+                        </p>
+                        <p>
+                             د. در وارد کردن ایمیل صحیح کوشا باشید. در صورت وارد کردن ایمیل نادرست قادر به استفاده از حساب کاربری خود نخواهید بود.
+                        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            برگشت به ثبت نام
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">ثبت نام
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        {% if next %}
+                            <form id="registerForm" action="." method="post" >
+                            <input type="hidden" name="next" value="{{next}}">
+                        {%else%}
+                            <form id="registerForm" action="." method="post" >
+                        {% endif %}
+                            {% csrf_token %}
+                            <input type="hidden" name="authentication_recaptcha" value="1">
+                            <fieldset>
+                                {% if conf_error %}
+                                <div class="form-group">
+                                    <input class="form-control" id="id_username" placeholder="نام کاربری" name="username" type="text"
+                                    required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Email" dir="ltr"
+                                    name="email" type="email " style="font-family:courier !important" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="نام و نام خانوادگی"
+                                    name="firstname" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="محل تحصیل"
+                                    name="organization" type="text"  value="" required>
+                                </div>
+                                <div class="form-group has-error">
+                                    <input class="form-control" placeholder="رمز عبور"
+                                    name="password" type="password"  value="" required>
+                                </div>
+                                <div class="form-group has-error">
+                                    <input class="form-control" placeholder="تکرار رمز عبور"
+                                    name="password_confirmation" type="password"  value="" required>
+                                </div>
+                                <div class="form-group g-recaptcha" data-sitekey="6LevWlYUAAAAAKBTvcgKwKoTRbPEkCTWSGf1yocN" ></div>
+                                <label class="control-label" style="color:red;" for="inputError">
+                                دو رمز عبور وارد شده همخوان نیستند.
+                                </label>
+                                {% elif user_error %}
+                                <div class="form-group has-error">
+                                    <input class="form-control" id="id_username" placeholder="نام کاربری" name="username" type="text"
+                                    required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Email" dir="ltr"
+                                    name="email" type="email " style="font-family:courier !important" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="نام و نام خانوادگی"
+                                    name="firstname" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="محل تحصیل"
+                                    name="organization" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="رمز عبور"
+                                    name="password" type="password"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="تکرار رمز عبور"
+                                    name="password_confirmation" type="password"  value="" required>
+                                </div>
+                                <div class="form-group g-recaptcha" data-sitekey="6LevWlYUAAAAAKBTvcgKwKoTRbPEkCTWSGf1yocN" ></div>
+                                <label class="control-label" style="color:red;" for="inputError">
+                                نام کاربری واردشده در سیستم موجود است.
+                                </label>
+                                {% elif email_error %}
+                                <div class="form-group">
+                                    <input class="form-control" id="id_username" placeholder="نام کاربری" name="username" type="text"
+                                    required>
+                                </div>
+                                <div class="form-group has-error">
+                                    <input class="form-control" placeholder="Email" dir="ltr"
+                                    name="email" style="font-family:courier !important" type="email "  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="نام و نام خانوادگی"
+                                    name="firstname" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="محل تحصیل"
+                                    name="organization" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="رمز عبور"
+                                    name="password" type="password"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="تکرار رمز عبور"
+                                    name="password_confirmation" type="password"  value="" required>
+                                </div>
+                                <div class="form-group g-recaptcha" data-sitekey="6LevWlYUAAAAAKBTvcgKwKoTRbPEkCTWSGf1yocN" ></div>
+                                <label class="control-label" style="color:red;" for="inputError">
+                                ایمیل وارد شده معتبر نیست.
+                                </label>
+                                {% elif email_exist_error %}
+                                <div class="form-group">
+                                    <input class="form-control" id="id_username" placeholder="نام کاربری" name="username" type="text"
+                                    required>
+                                </div>
+                                <div class="form-group has-error">
+                                    <input class="form-control" placeholder="Email" dir="ltr"
+                                    name="email" type="email " style="font-family:courier !important" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="نام و نام خانوادگی"
+                                    name="firstname" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="محل تحصیل"
+                                    name="organization" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="رمز عبور"
+                                    name="password" type="password"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="تکرار رمز عبور"
+                                    name="password_confirmation" type="password"  value="" required>
+                                </div>
+                                <div class="form-group g-recaptcha" data-sitekey="6LevWlYUAAAAAKBTvcgKwKoTRbPEkCTWSGf1yocN" ></div>
+                                <label class="control-label" style="color:red;" for="inputError">
+                                ایمیل وارد شده در سیستم موجود است.
+                                </label>
+                                {% elif username_error %}
+                                <div class="form-group has-error">
+                                    <input class="form-control" id="id_username" placeholder="نام کاربری" name="username" type="text"
+                                    required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Email" dir="ltr"
+                                    name="email" type="email " style="font-family:courier !important" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="نام و نام خانوادگی"
+                                    name="firstname" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="محل تحصیل"
+                                    name="organization" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="رمز عبور"
+                                    name="password" type="password"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="تکرار رمز عبور"
+                                    name="password_confirmation" type="password"  value="" required>
+                                </div>
+                                <div class="form-group g-recaptcha" data-sitekey="6LevWlYUAAAAAKBTvcgKwKoTRbPEkCTWSGf1yocN" ></div>
+                                <label class="control-label" style="color:red;" for="inputError">
+                                نام کاربری وارد شده معتبر نیست.
+                                نام کاربری می تواند (فقط) شامل موارد زیر باشد :
+                                <br>
+                                کاراکتر های لاتین (بزرگ یا کوچک)
+                                <br>
+                                ارقام
+                                <br>
+                                ـ یا . یا -
+                                (underline, dash, dot)
+                                </label>
+                                {% else %}
+                                <div class="form-group">
+                                    <input class="form-control" id="id_username" placeholder="نام کاربری" name="username" type="text"
+                                    required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Email" dir="ltr"
+                                    name="email" type="email " style="font-family:courier !important" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="نام و نام خانوادگی"
+                                    name="firstname" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="محل تحصیل"
+                                    name="organization" type="text"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="رمز عبور"
+                                    name="password" type="password"  value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="تکرار رمز عبور"
+                                    name="password_confirmation" type="password"  value="" required>
+                                </div>
+                                <div class="form-group g-recaptcha" data-sitekey="6LevWlYUAAAAAKBTvcgKwKoTRbPEkCTWSGf1yocN" ></div>
+                                {% endif %}
+
+                                <button type="submit" class="btn  btn-success btn-block">ثبت نام</button>
+                                <p></p>
+                                <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#RulesModal">
+                                    مشاهده قوانین و حریم خصوصی در کیوبیت
+                                </button>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="{% static 'main/content/login/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'main/content/login/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    {% comment %}<script src="{% static 'main/content/login/dist/js/sb-admin-2.js' %}"></script>{% endcomment %}
+
+</body>
+
+</html>

@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html style="font-family:&quot;byekan&quot;;mso-bidi-language:FA" lang="fa">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'main/logo/black/Logo@8x.png' %}" />
+    <link href="{% static 'main/content/index/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'blog/content/css/base.css' %}" rel="stylesheet">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        MathJax.Hub.Config({
+          "HTML-CSS": {
+            preferredFont: "TeX"
+          }
+        });
+    </script>
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        code{
+           font-family:courier;
+           direction : ltr;
+           text-align:left; !important
+        }
+        pre {
+           font-family:courier;
+           direction : ltr;
+           text-align:left; !important
+        }
+    </style>
+    {% block page-css %}{% endblock %}
+    {% block page-script %}{% endblock %}
+</head>
+
+<body>
+
+
+<nav dir="rtl" style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"> <!--style="background-color:#d1d1d1"-->
+        <a class="navbar-brand" href="">
+        <img src="{% static 'main/logo/new/Logo@8x.png' %}" width="22" height="30" class="d-inline-block align-top" alt="">
+        {% comment %}{% block navbar-title %}{% endblock navbar-title%}{% endcomment %}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+        {% comment %}
+            <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        {% endcomment %}
+        {% if user.is_authenticated  %}
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+          </ul>
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item">
+              <a class="nav-link active" href="/accounts/settings/personal/">
+                  {{user.first_name}}
+
+            عزیز خوش آمدید
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/mail/">
+                پیام ها
+              </a>
+            </li>
+            {% comment %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+              </li>
+            {% endcomment %}
+            {% if user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link active" href="/admin">
+            مدیریت سایت
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_logout' %}?next={{ request.path }}">
+              خروج
+              </a>
+            </li>
+
+        </ul>
+            {% else %}
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_login' %}?next={{ request.path }}">
+              ورود
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'main:accounts_register' %}?next={{ request.path }}">
+              ثبت نام
+              </a>
+            </li>
+
+        </ul>
+
+            {% endif %}
+
+        </div>
+
+</nav>
+
+
+{% comment %}
+<div class="container">
+{% endcomment %}
+{% block container-type %}
+{% endblock container-type %}
+    {% comment %}
+    <p></p>
+    <ol dir="rtl" class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#">Home</a></li>
+      <li class="breadcrumb-item"><a href="#">Library</a></li>
+      <li class="breadcrumb-item active">Data</li>
+    </ol>
+    {% endcomment %}
+    <div class="row">
+        {% block sidebar %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block right-sidebar %}{% endblock %}
+    </div>
+
+
+</div>
+<script src="{% static 'blog/content/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+{% if user.is_authenticated %}
+<script>
+    var username = "{{user.username}}";
+</script>
+<script src="{% static 'contest/js/notifications.js' %}"></script>
+{% endif %}
+</body>
+
+</html>

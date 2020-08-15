@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="rtl" style="font-family:&quot;B Nazanin&quot;;mso-bidi-language:FA" lang="fa">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Qbit - Reset Password</title>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <link href="{% static 'main/content/login/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'main/content/login/dist/css/sb-admin-2.css' %}" rel="stylesheet">
+    <style>
+    @font-face {
+      font-family: 'byekan';
+      src: url('/static/main/fonts/BYekan.ttf')  format("truetype"),
+           local('byekan');
+    }
+    html *
+    {
+       font-family: byekan !important;
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            تغییر گذرواژه
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                            <p>
+                                {{firstname}} عزیز :
+                            </p>
+                            <p>جهت تغییر گذرواژه خود این فرم را پر کنید. این فرم به مدت ۲۴ ساعت از زمان درخواست رمز عبور قابل استفاده است.</p>
+                            <form id="PasswordChangeForm" action="." method="post" >
+                            {% csrf_token %}
+                            <input type="hidden" name="authentication_recaptcha" value="1">
+                            <input type="hidden" name="who" value="{{aim_token}}">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input class="form-control" name="password" type="password" placeholder="رمز عبور"
+                                     required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" name="password_confirm" type="password" placeholder="تکرار رمز عبور"
+                                    required>
+                                </div>
+                                <div class="form-group g-recaptcha" data-sitekey="6LevWlYUAAAAAKBTvcgKwKoTRbPEkCTWSGf1yocN" ></div>
+                                {% if MATCH %}
+                                <p style="color:red">
+                                    دو گذرواژه وارد شده هم خوانی ندارند.
+                                </p>
+                                {% endif %}
+                                <button type="submit" class="btn  btn-success btn-block">
+                                    تغییر گذرواژه
+                                </button>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{% static 'main/content/login/vendor/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'main/content/login/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'main/content/login/dist/js/sb-admin-2.js' %}"></script>
+
+</body>
+
+</html>

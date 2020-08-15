@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html style="font-family:&quot;byekan&quot;;mso-bidi-language:FA" lang="fa">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Qbit | Mails</title>
+    <script src="{% static 'main/ckeditor/ckeditor.js' %}"></script>
+    <link href="{% static 'blog/content/css/blog-post.css' %}" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'main/logo/black/Logo@8x.png' %}" />
+    <link href="{% static 'main/content/index/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'blog/content/css/base.css' %}" rel="stylesheet">
+    <script src="{% static 'main/calendar/jalali-moment.browser.js' %}"></script>
+    <script src="{% static 'mail/js/client.js' %}"></script>
+
+</head>
+
+<body>
+<nav dir="rtl" style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"> <!--style="background-color:#d1d1d1"-->
+        <a class="navbar-brand" href="">
+        <img src="{% static 'main/logo/new/Logo@8x.png' %}" width="22" height="30" class="d-inline-block align-top" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+        {% if user.is_authenticated  %}
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+          </ul>
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item">
+              <a class="nav-link active" href="/accounts/settings/personal/">
+                  {{user.first_name}}
+
+            عزیز خوش آمدید
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/mail/">
+                پیام ها
+              </a>
+            </li>
+            {% if user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link active" href="/admin">
+            مدیریت سایت
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_logout' %}?next={{ request.path }}">
+              خروج
+              </a>
+            </li>
+        </ul>
+            {% else %}
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_login' %}?next={{ request.path }}">
+              ورود
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'main:accounts_register' %}?next={{ request.path }}">
+              ثبت نام
+              </a>
+            </li>
+
+        </ul>
+
+            {% endif %}
+
+        </div>
+    </div>
+</nav>
+
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-lg-9">
+            <h4 class="text-right mt-4">
+                ارسال پیام جدید
+            </h4>
+            <hr>
+            <div class="text-right" dir="rtl">
+                <form method="post" action=".">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>
+                                از
+                            </label>
+                            <input type="text" class="form-control" value="{{user.first_name}}" disabled>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>
+                                به
+                            </label>
+                            <select id="receiver" name="receiver" class="form-control">
+                                {% for superuser in superusers %}
+                                    <option value="{{superuser}}">
+                                        {{superuser.first_name}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label>
+                                موضوع
+                            </label>
+                            <input type="text" class="form-control" name="topic" id="topic" maxlength="1000" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label>
+                                متن
+                            </label>
+                            <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        ارسال
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h4 class="text-right mt-4">
+                چند نکته
+            </h4>
+            <hr>
+            <p dir="rtl" class="text-right" style="text-align:justify;text-justify: inter-word;">
+                الف. در حال حاضر ارسال پیام تنها به مدیران سایت امکان پذیر است.
+                <br>
+                ب. در انتخاب موضوع دقت را ضمیمه کار کنید و محتوای پیام یا مشکل خود را گیرا تر بیان کنید چرا که بررسی این پیام ها برای مدیران در اولویت است.
+                <br>
+                پ. موضوع می تواند حداکثر ۱۰۰۰ کاراکتر باشد.
+                <br>
+                ت. در طول مسابقات پیام ها تا حداکثر ۵ دقیقه پاسخ داده خواهند شد. از پرسش سوال خود در جیمیل خودداری کنید. همچنین در طول مسابقات موضوع پیام خود را ضمیمه نام مسابقه یا موارد مورد نیاز کنید.
+            </p>
+
+            <p></p>
+            <a class="btn btn-block btn-success" href="/mail/inbox/">
+                بازگشت به دریافت ها
+            </a>
+
+        </div>
+    </div>
+</main>
+<script src="{% static 'blog/content/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
+</html>
+

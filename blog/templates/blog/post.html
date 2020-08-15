@@ -1,0 +1,113 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block navbar-title %}بلاگ رسمی کیوبیت{% endblock navbar-title%}
+{% block title %}Qbit - Blog - {{blog.title}} {% endblock %}
+{% block page-css %}<script src="{% static 'main/ckeditor/ckeditor.js' %}"></script>
+<link href="{% static 'blog/content/css/blog-post.css' %}" rel="stylesheet">{% endblock %}
+{% block page-script %}<script src="{% static 'main/calendar/jalali-moment.browser.js' %}"></script>{% endblock %}
+{% block container-type %}
+<div class="container">
+{% endblock container-type %}
+{% block content %}
+        <div class="col-lg-8">
+
+          <!-- Title -->
+          <h1 dir="rtl" class="text-right mt-4">{{blog.title}}</h1>
+
+          <hr>
+
+        <div data-toggle="tooltip" dir="rtl" class="text-right">
+        پست شده در تاریخ
+        <span id="blog-{{blog.id}}-date"></span>
+        و
+        در ساعت
+        {{ blog.release_date|date:"H:i" }}
+        توسط
+        <a style="text-decoration:none;" href="/accounts/profile/{{blog.author.username}}">{{blog.author.first_name}}</a>
+        <script>
+            document.getElementById("blog-{{blog.id}}-date").innerHTML = moment("{{blog.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{blog.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +
+            moment("{{blog.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+        </script>
+        </div>
+
+            <hr>
+            <div class="text-right">
+            {{ blog.text |safe }}
+            </div>
+            <hr>
+
+        <div class="text-right card my-4 border-dark">
+        <h5 class="text-right card-header border-dark">دیدگاهتان را بنویسید</h5>
+        <div class="card-body">
+          <form method="post" action="/blog/{{blog.id}}/comments/{{blog.id}}/reply/">
+            {% csrf_token %}
+            <div class="form-group">
+            <textarea dir="rtl" name="new_comment_text" id="editor1" rows="3" required></textarea>
+            <script>
+                CKEDITOR.replace( 'editor1' );
+            </script>
+            </div>
+            {% if errors == "FILL" %}
+            <label dir="rtl" style="color:red;">فیلد متن خالی است.</label>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">ارسال نظر</button>
+          </form>
+        </div>
+        </div>
+
+            <div id="ReplyModal" class="modal fade" role="dialog">
+              <div dir="rtl" class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="text-right modal-header">
+                    <h4 class="text-right modal-title">Modal Header</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+        {% if comments != "NONE" %}
+        <div class="my-4">
+
+        <h3 class="text-right">
+        دید گاه های ثبت شده
+        </h3>
+
+
+        {{comments | safe}}
+        </div>
+        {% else %}
+        {% endif %}
+
+        </div>
+{% endblock %}
+{% block sidebar %}
+<div class="col-md-4">
+    <div style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card my-4 border-primary">
+        <h5 class="text-right card-header border-primary">
+            بلاگ های مهم
+        </h5>
+        <div dir="rtl" class="text-right card-body">
+        {% if pinned_blogs %}
+            {% for pinned_blog in pinned_blogs %}
+                {% if not forloop.last %}
+                <a style="text-decoration:none;" href="{% url 'blog:index' pinned_blog.id %}">{{pinned_blog.title}}</a>
+                <hr>
+                {% else %}
+                <a style="text-decoration:none;" href="{% url 'blog:index' pinned_blog.id %}">{{pinned_blog.title}}</a>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+        هیچ پستی پین نشده است
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

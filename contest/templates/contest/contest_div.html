@@ -1,0 +1,159 @@
+{% load static %}
+<div style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card my-4 border-light">
+        <h5 class="text-right card-header">{{ contest.title }}</h5>
+        <div dir="rtl" class="text-center card-body">
+            {% if contest_state == "B" %} <!-- Before Contest-->
+                <!--<p></p>-->
+                <p>
+                     تا شروع مسابقه
+                </p>
+                <div data-reactroot>
+                    <div style="display: inline-block;">
+                        <span id="second-{{contest.code}}"></span>
+                        <br>
+                        <span style="font-size:10px">
+                        ثانیه
+                        </span>
+                    </div>
+                    <div style="display: inline-block;"></div>
+                    <div style="display: inline-block;">
+                        <span id="minute-{{contest.code}}"></span>
+                        <br>
+                        <span style="font-size:10px">
+                        دقیقه
+                        </span>
+                    </div>
+
+                    <div style="display: inline-block;"></div>
+                    <div style="display: inline-block;">
+                        <span id="hour-{{contest.code}}"></span>
+                        <br>
+                        <span style="font-size:10px">
+                        ساعت
+                        </span>
+                    </div>
+                    <div style="display: inline-block;"></div>
+                    <div style="display: inline-block;">
+                        <span id="day-{{contest.code}}"></span>
+                        <br>
+                        <span style="font-size:10px" >
+                        روز
+                        </span>
+                    </div>
+                </div>
+                <script>
+                    var w;
+                    w = new Worker("{% static 'contest/js/handle.js' %}");
+                    w.postMessage(["start"]);
+                    w.onmessage = function(event) {
+                        if(event.data[0] == "countdown" ){
+                            var now = new Date(event.data[1]).getTime();
+                            var contest_start_date = new Date("{{contest.date_start|date:'M, d Y H:i:s'}}").getTime()
+                            var distance = contest_start_date - now;
+                            if (distance < 0){
+                                document.getElementById("day-"+"{{contest.code}}").innerHTML = 0;
+                                document.getElementById("hour-"+"{{contest.code}}").innerHTML = 0;
+                                document.getElementById("minute-"+"{{contest.code}}").innerHTML = 0;
+                                document.getElementById("second-"+"{{contest.code}}").innerHTML = 0;
+                                location.reload();
+                                w.terminate();
+                            }
+                            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                            document.getElementById("day-"+"{{contest.code}}").innerHTML = days;
+                            document.getElementById("hour-"+"{{contest.code}}").innerHTML = hours;
+                            document.getElementById("minute-"+"{{contest.code}}").innerHTML = minutes;
+                            document.getElementById("second-"+"{{contest.code}}").innerHTML = seconds;
+
+                            }
+
+                    };
+
+                </script>
+            {% elif contest_state == "C" %} <!-- After Contest -->
+                {% comment %}
+                <p>
+                این مسابقه به پایان رسیده است.
+                </p>
+                {% endcomment %}
+            {% else %} <!-- During Contest -->
+                <p>
+                     تا پایان مسابقه
+                </p>
+                <div data-reactroot>
+                    <div style="display: inline-block;">
+                        <span id="second-{{contest.code}}"></span>
+                        <br>
+                        <span style="font-size:10px">
+                        ثانیه
+                        </span>
+                    </div>
+                    <div style="display: inline-block;"></div>
+                    <div style="display: inline-block;">
+                        <span id="minute-{{contest.code}}"></span>
+                        <br>
+                        <span style="font-size:10px">
+                        دقیقه
+                        </span>
+                    </div>
+
+                    <div style="display: inline-block;"></div>
+                    <div style="display: inline-block;">
+                        <span id="hour-{{contest.code}}"></span>
+                        <br>
+                        <span style="font-size:10px">
+                        ساعت
+                        </span>
+                    </div>
+                    <div style="display: inline-block;"></div>
+                    <div style="display: inline-block;">
+                        <span id="day-{{contest.code}}"></span>
+                        <br>
+                        <span style="font-size:10px" >
+                        روز
+                        </span>
+                    </div>
+                </div>
+                <script>
+                    var w;
+                    w = new Worker("{% static 'contest/js/handle.js' %}");
+                    w.postMessage(["start"]);
+                    w.onmessage = function(event) {
+                        if(event.data[0] == "countdown" ){
+                            // During Contest
+                            var now = new Date(event.data[1]).getTime();
+                            var contest_end_date = new Date("{{contest.date_end|date:'M, d Y H:i:s'}}").getTime()
+                            var distance = contest_end_date - now;
+                            if (distance < 0){
+                                document.getElementById("day-"+"{{contest.code}}").innerHTML = 0;
+                                document.getElementById("hour-"+"{{contest.code}}").innerHTML = 0;
+                                document.getElementById("minute-"+"{{contest.code}}").innerHTML = 0;
+                                document.getElementById("second-"+"{{contest.code}}").innerHTML = 0;
+                                location.reload();
+                                w.terminate();
+                            }
+                            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                            document.getElementById("day-"+"{{contest.code}}").innerHTML = days;
+                            document.getElementById("hour-"+"{{contest.code}}").innerHTML = hours;
+                            document.getElementById("minute-"+"{{contest.code}}").innerHTML = minutes;
+                            document.getElementById("second-"+"{{contest.code}}").innerHTML = seconds;
+
+                            }
+
+                    };
+                </script>
+            {% endif %}
+            <p></p>
+            <p><a style="text-decoration:none;" href="/contest/{{contest.code}}/"> فهرست سوالات </a>
+            </p>
+            <p><a style="text-decoration:none;" href="/contest/{{contest.code}}/scoreboard/">جدول امتیازات</a>
+            </p>
+        </div>
+</div>

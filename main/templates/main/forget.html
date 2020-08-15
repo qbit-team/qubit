@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="rtl" style="font-family:&quot;B Nazanin&quot;;mso-bidi-language:FA" lang="fa">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Qbit - Forget Password</title>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <link href="{% static 'main/content/login/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'main/content/login/dist/css/sb-admin-2.css' %}" rel="stylesheet">
+    <style>
+    @font-face {
+      font-family: 'byekan';
+      src: url('/static/main/fonts/BYekan.ttf')  format("truetype"),
+           local('byekan');
+    }
+    html *
+    {
+       font-family: byekan !important;
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            فراموشی رمز عبور
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                            <form action="." method="post" >
+                            {% csrf_token %}
+                            <input type="hidden" name="authentication_recaptcha" value="1">
+                            <fieldset>
+                                <div class="form-group">
+                                    <p>
+                                        ایمیلی که در هنگام ثبت نام وارد کرده اید را در زیر وارد کنید.
+                                    <p>
+                                    <input type="email" placeholder="Email" dir="ltr" style="font-family:courier !important" class="form-control" name="email"
+                                    required>
+                                </div>
+                                <div class="form-group g-recaptcha" data-sitekey="6LevWlYUAAAAAKBTvcgKwKoTRbPEkCTWSGf1yocN" ></div>
+                                {% if EMAIL_EXIST_ERROR %}
+                                <p style="color:red;">
+                                    ایمیل وارد شده در سیستم موجود نیست.
+                                </p>
+                                {% endif %}
+                                {% if FILL_ERROR %}
+                                <p style="color:red;">
+                                    فرم را کامل پر کنید.
+                                </p>
+                                {% endif %}
+                                <button type="submit" class="btn  btn-success btn-block">
+                                    ارسال لینک تغییر رمز عبور
+                                </button>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="{% static 'main/content/login/vendor/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'main/content/login/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    {% comment %}<script src="{% static 'main/content/login/dist/js/sb-admin-2.js' %}"></script>{% endcomment %}
+
+</body>
+
+</html>

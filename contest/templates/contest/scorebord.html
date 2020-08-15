@@ -1,0 +1,86 @@
+{% extends "main/base-contest.html" %}
+{% load static %}
+{% block navbar-title %} کیوبیت {% endblock navbar-title%}
+{% block title %}Qbit - Contests {% endblock %}
+{% block page-css %}<link href="{% static 'blog/content/css/blog-home.css' %}" rel="stylesheet">{% endblock %}
+{% block container-type %}
+<div class="container-fluid">
+{% endblock container-type %}
+{% block content %}
+
+<script>
+    function stc(pe)
+    {
+        pe*=120;
+        return 'hsl('+pe+',100%,50%)';
+    }
+    window.addEventListener( "pageshow", function ( event ) {
+  var historyTraversal = event.persisted ||
+                         ( typeof window.performance != "undefined" &&
+                              window.performance.navigation.type === 2 );
+});
+</script>
+
+<div class="col-md-9">
+
+    <h1 class="my-4">
+    <small></small>
+    </h1>
+    <div style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card mb-4 border-light">
+        <h5 class="text-right card-header">
+            جدول امتیازات
+        </h5>
+        <div class="text-right card-body">
+            <div class="table-responsive" >
+                <table dir="rtl" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td align="center" style="vertical-align:middle">
+                                نام کاربر
+                            </td>
+                            {% for problem in problems %}
+                            <td align="center" style="vertical-align:middle"><a style="text-decoration:none;" href="/problem/{{problem.code}}">{{problem.title}}</a></td>
+                            {% endfor %}
+                            <td align="center" style="vertical-align:middle">
+                                جمع امتیاز
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for scsum,user,scores in jadval %}
+                            <tr>
+                                <!--<td align="center">{{problem.id}}</td>-->
+                                <td align="center" style="vertical-align:middle"><a style="text-decoration:none;" href="/accounts/profile/{{user.username}}">{{user.first_name}}</a></td>
+                                {% for score,maxscore in scores %}
+                                    {% if score == "-" %}
+                                    <td align="center">-</td>
+                                    {% else %}
+                                    <!-- this.style.backgroundColor=stc({{score}}/{{problem.maxscore}}); -->
+                                        <td align="center" id="tdtd_{{user.username}}_{{forloop.counter}}">{{score}}</td>
+                                        <script>
+                                            document.getElementById("tdtd_{{user.username}}_{{forloop.counter}}").style.backgroundColor=stc({{score}}/{{maxscore}});
+                                        </script>
+                                    {% endif %}
+                                {% endfor %}
+                                <td align="center" id="tdtd_{{user.username}}" style="vertical-align:middle"> {{scsum}}</td>
+                                <script>
+                                    document.getElementById("tdtd_{{user.username}}").style.backgroundColor=stc({{scsum}}/{{contest_maxscore}});
+                                </script>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block sidebar%}
+<div class="col-md-3">
+    {{ contest.html_div }}
+</div>
+{% endblock %}
+
+

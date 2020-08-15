@@ -1,0 +1,172 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block navbar-title %} کیوبیت {% endblock navbar-title%}
+{% block title %}Qbit - Submissions Queue {% endblock %}
+{% block page-css %}<link href="{% static 'blog/content/css/blog-home.css' %}" rel="stylesheet">{% endblock %}
+{% block page-script %}
+<script src="{% static 'main/calendar/jalali-moment.browser.js' %}"></script>
+{% endblock %}
+{% block container-type %}
+<div class="container">
+{% endblock container-type %}
+{% block content %}
+<div class="col-md-12">
+
+    <h3 class="text-center my-4">
+    <small>
+    </small>
+    </h3>
+    <div style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card mb-4 border-light">
+        <h5 class="text-center card-header">
+            صف داوری ارسال ها
+        </h5>
+        <div class="text-right card-body">
+            <div class="table-responsive" >
+                <table dir="rtl" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td align="center" style="vertical-align:middle;">
+                            شناسه
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                ارسال کننده
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                نام مسئله
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                            نام زیر مسئله
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                            زمان درخواست
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                            وضعیت داوری
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                            زمان داوری
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for submission in submissions %}
+                            <tr>
+                                <td align="center" style="vertical-align:middle;">{{submission.id}}</td>
+                                <td align="center" style="vertical-align:middle;"><a style="text-decoration:none;" href="/accounts/profile/{{submission.user.username}}">{{submission.user.first_name}}</a></td>
+                                <td align="center" style="vertical-align:middle;"><a style="text-decoration:none;" href="/problem/{{submission.task.problem.code}}">{{submission.task.problem.title}}</a></td>
+                                <td align="center" style="vertical-align:middle;">{{submission.task.get_code_display}}</td>
+                                <td align="center" style="vertical-align:middle;">
+                                    <span id="submission-{{submission.id}}-date">
+                                    </span>
+                                    <br>
+                                    <span>
+                                    ساعت
+                                    {{submission.when_release|date:"H:i:s"}}
+                                    </span>
+                                </td>
+
+                                {% if submission.submission.verdict == 2 %}
+                                <td align="center" style="vertical-align:middle;">
+                                    <span style="color:gray">
+                                        در صف داوری
+                                    </span>
+                                </td>
+                                <td align="center" style="vertical-align:middle;">
+                                    -
+                                </td>
+                                {% elif submission.submission.verdict == 3 %}
+                                <td align="center" style="vertical-align:middle;">
+                                    <span style="color:orange">
+                                        در حال داوری
+                                    </span>
+                                </td>
+                                <td align="center" style="vertical-align:middle;">
+                                    -
+                                </td>
+                                {% elif submission.when_judged != None %}
+                                <td align="center" style="vertical-align:middle;">
+                                    <span style="color:green">
+                                        انجام شد
+                                    </span>
+                                </td>
+                                <td align="center" style="vertical-align:middle;">
+                                    <span id="submission-{{submission.id}}-judge">
+                                    </span>
+                                    <br>
+                                    <span>
+                                    ساعت
+                                    {{submission.when_judged|date:"H:i:s"}}
+                                    </span>
+                                </td>
+                                <script>
+                                    document.getElementById("submission-{{submission.id}}-judge").innerHTML = moment("{{submission.when_judged|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{submission.when_judged|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +moment("{{submission.when_judged|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+                                </script>
+                                {% endif %}
+                                <script>
+                                    document.getElementById("submission-{{submission.id}}-date").innerHTML = moment("{{submission.when_release|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{submission.when_release|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +moment("{{submission.when_release|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+                                </script>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% comment %}
+    <ul class="pagination justify-content-center border-success mb-4">
+        {% if current_page == "1" %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="/problemset/page/1">1</a></li>
+            <li class="page-item"><a class="page-link">...</a></li>
+            <li class="page-item"><a class="page-link" href="/problemset/page/{{last_page}}">{{last_page}}</a></li>
+            <li class="page-item">
+              <a class="page-link" href="/problemset/page/{{next_page}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+        {% elif current_page == last_page %}
+            <li class="page-item">
+              <a class="page-link" href="/problemset/page/{{previous_page}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="/problemset/page/1">1</a></li>
+            <li class="page-item"><a class="page-link">...</a></li>
+            <li class="page-item"><a class="page-link" href="/problemset/page/{{last_page}}">{{last_page}}</a></li>
+            <li class="page-item">
+              <a class="page-link disabled" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+        {% else %}
+            <li class="page-item">
+              <a class="page-link" href="/problemset/page/{{previous_page}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="/problemset/page/1">1</a></li>
+            <li class="page-item"><a class="page-link">...</a></li>
+            <li class="page-item"><a class="page-link" href="/problemset/page/{{current_page}}">{{current_page}}</a></li>
+            <li class="page-item"><a class="page-link">...</a></li>
+            <li class="page-item"><a class="page-link" href="/problemset/page/{{last_page}}">{{last_page}}</a></li>
+            <li class="page-item">
+              <a class="page-link" href="/problemset/page/{{next_page}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+        {% endif %}
+    </ul>
+    {% endcomment %}
+</div>
+
+{% endblock %}

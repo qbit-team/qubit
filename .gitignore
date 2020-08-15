@@ -1,0 +1,21 @@
+# editors
+.vscode
+.idea
+
+# db files
+*.sqlite3
+*.sql
+
+# pyc, pyo, pycache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# django related and media
+media/
+/static/
+migrations/
+
+# qubit secrets
+qubit_secrets.py

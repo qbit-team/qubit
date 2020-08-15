@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html style="font-family:&quot;byekan&quot;;mso-bidi-language:FA" lang="fa">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Qbit - {{profile.user.first_name}}</title>
+    <link href="{% static 'blog/content/css/blog-post.css' %}" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'main/logo/black/Logo@8x.png' %}" />
+    <link href="{% static 'main/content/index/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'blog/content/css/base.css' %}" rel="stylesheet">
+    <script src="{% static 'main/calendar/jalali-moment.browser.js' %}"></script>
+
+</head>
+
+<body>
+
+
+<nav dir="rtl" style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"> <!--style="background-color:#d1d1d1"-->
+        <a class="navbar-brand" href="">
+        {% comment %}
+            کیوبیت
+        {% endcomment %}
+        <img src="{% static 'main/logo/new/Logo@8x.png' %}" width="22" height="30" class="d-inline-block align-top" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+        {% comment %}
+            <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        {% endcomment %}
+        {% if user.is_authenticated  %}
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+          </ul>
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item">
+              <a class="nav-link active" href="/accounts/settings/personal/">
+                  {{user.first_name}}
+
+            عزیز خوش آمدید
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/mail/">
+                پیام ها
+              </a>
+            </li>
+            {% if user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link active" href="/admin">
+            مدیریت سایت
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_logout' %}?next={{ request.path }}">
+              خروج
+              </a>
+            </li>
+        </ul>
+            {% else %}
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_login' %}?next={{ request.path }}">
+              ورود
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'main:accounts_register' %}?next={{ request.path }}">
+              ثبت نام
+              </a>
+            </li>
+
+        </ul>
+
+            {% endif %}
+
+        </div>
+    </div>
+</nav>
+
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="text-right">
+            <h3 class="text-right mt-4">
+                مسابقات شرکت کرده
+            </h3>
+            <hr>
+            {% if contests_in %}
+                {% for contest in contests_in %}
+                    <a href="/contest/{{contest.code}}/" style="font-size:14px" class="badge badge-primary">
+                        {{contest.title}}
+                    </a>
+                {% endfor %}
+            {% else %}
+            <p dir="rtl">
+                این کاربر در هیچ مسابقه ای شرکت نکرده است.
+            </p>
+            {% endif %}
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card my-4">
+                {% if profile.photo %}
+                <img class="card-img-top" src="{{profile.photo.url}}" alt="Card image cap">
+                {% else %}
+                <img class="card-img-top" src="/media/default/default.jpg" alt="Card image cap">
+                {% endif %}
+                <div dir="rtl" class="card-body">
+                    <p class="text-center">
+                        {{profile.user.first_name}}
+                    </p>
+                    <hr>
+                    <p class="text-center">
+                        عضویت در
+                        <span id="date_joined">
+
+                        </span>
+                        <script>
+                            document.getElementById("date_joined").innerHTML = moment("{{profile.user.date_joined|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{profile.user.date_joined|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +moment("{{profile.user.date_joined|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+                        </script>
+                    </p>
+                    {% if profile.last_active|date:'H' == server_time|date:'H' %}
+                    <p class="text-center" style="color:green">
+                        آنلاین
+                    </p>
+                    {% else %}
+                    <p class="text-center">
+                        آخرین فعالیت در
+                        <span id="last_active">
+                        </span>
+                        ساعت
+                        <span>
+                            {{profile.last_active|date:'H'}}
+                        </span>
+                        <script>
+                            document.getElementById("last_active").innerHTML = moment("{{profile.last_active|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{profile.last_active|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +moment("{{profile.last_active|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+                        </script>
+                    </p>
+                    {% endif %}
+
+                </div>
+                {% if profile.user.is_superuser %}
+                <div class="text-center card-footer text-muted">
+                    مدیر سیستم
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+</main>
+<script src="{% static 'blog/content/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script>
+    var username = "{{user.username}}";
+</script>
+<script src="{% static 'contest/js/notifications.js' %}"></script>
+</body>
+
+</html>
+

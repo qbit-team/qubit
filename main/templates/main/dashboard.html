@@ -1,0 +1,829 @@
+{% load static %}
+<!DOCTYPE html>
+<html style="font-family:&quot;byekan&quot;;mso-bidi-language:FA" lang="fa">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Qbit - Accounts Settings</title>
+    <script src="{% static 'main/ckeditor/ckeditor.js' %}"></script>
+    <link href="{% static 'blog/content/css/blog-post.css' %}" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'main/logo/black/Logo@8x.png' %}" />
+    <link href="{% static 'main/content/index/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'blog/content/css/base.css' %}" rel="stylesheet">
+    <script src="{% static 'main/calendar/jalali-moment.browser.js' %}"></script>
+
+</head>
+
+<body>
+
+
+<nav dir="rtl" style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"> <!--style="background-color:#d1d1d1"-->
+        <a class="navbar-brand" href="">
+        {% comment %}
+            کیوبیت
+        {% endcomment %}
+        <img src="{% static 'main/logo/new/Logo@8x.png' %}" width="22" height="30" class="d-inline-block align-top" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+        {% comment %}
+            <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        {% endcomment %}
+        {% if user.is_authenticated  %}
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+          </ul>
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item">
+              <a class="nav-link active" href="/accounts/settings/personal/">
+                  {{user.first_name}}
+
+            عزیز خوش آمدید
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/mail/">
+                پیام ها
+              </a>
+            </li>
+            {% if user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link active" href="/admin">
+            مدیریت سایت
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_logout' %}?next={{ request.path }}">
+              خروج
+              </a>
+            </li>
+        </ul>
+            {% else %}
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_login' %}?next={{ request.path }}">
+              ورود
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'main:accounts_register' %}?next={{ request.path }}">
+              ثبت نام
+              </a>
+            </li>
+
+        </ul>
+
+            {% endif %}
+
+        </div>
+    </div>
+</nav>
+
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-lg-9">
+            {% if personal_settings %}
+            <h3 class="text-right mt-4">
+              تصویر کاربر
+            </h3>
+            <div class="text-right">
+                <table dir="rtl" class="table">
+                    <thead>
+                        <tr>
+                            {% if profile.photo %}
+                            <td align="center" style="vertical-align:middle;">
+                                <img class="rounded border border-light" id="profile_photo" src="{{profile.photo.url}}" width="120" height="120" alt="">
+                                <script>
+                                    h = {{profile.photo.height}};
+                                    w = {{profile.photo.width}};
+                                    document.getElementById("profile_photo").height = 120;
+                                    document.getElementById("profile_photo").width = (w/h)*120;
+                                </script>
+                            </td>
+                            {% endif %}
+
+                            <td align="right" style="vertical-align:middle;">
+                                <p>
+                                    با کلیک روی دکمه زیر می توانید عکس پروفایل خود را تغییر دهید.
+                                     عکس را باید روی کامپیوتر خود برش دهید و سپس آپلود کنید.
+                                     می توانید فایل مورد نظر را از روی رایانه به ناحیه زیر بکشید.
+                                        همچنین حجم فایل حداکثر یک مگابایت می تواند باشد.
+
+                                </p>
+                                <form id="form_uploader" method="post" enctype="multipart/form-data" action="/accounts/settings/personal/change/profile/photo/">
+                                    {% csrf_token %}
+                                    <div class="form-row">
+
+                                        <div id="div_uploader" class="form-group file btn btn-primary">
+    							            بارگذاری تصویر
+    							            <input id="profile_photo_file" type="file" name="profile_photo_file"/>
+    						            </div>
+    						            <style>
+    						            #div_uploader {
+                                            position: relative;
+                                              /*overflow: hidden;*/
+                                            }
+                                        #profile_photo_file {
+                                              position: absolute;
+                                              font-size: 50px;
+                                              opacity: 0;
+                                              right: 0;
+                                              top: 0;
+                                            }
+    						            </style>
+    						            <script>
+    						                document.getElementById('profile_photo_file').onchange = function() {
+    						                    {% comment %}
+                                                //document.getElementById('div_uploader').innerHTML = document.getElementById('profile_photo_file').files[0].name ;
+                                                {% endcomment %}
+                                                document.getElementById("form_uploader").submit();
+                                            };
+    						            </script>
+                                    </div>
+                                    {% comment %}
+                                    <div class="custom-file">
+                                      <input type="file" class="custom-file-input" name="profile_photo_file" id="profile_photo_file">
+                                      <label class="custom-file-label">
+                                          انتخاب فایل
+                                      </label>
+                                    </div>
+                                    {% endcomment %}
+                                    {% if file_size_error %}
+                                    <label class="control-label" style="color:red;" for="inputError">
+                                        حجم فایل بیش از 1 مگابایت است.
+                                    </label>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <h3 class="text-right mt-4">
+                مشخصات فردی
+            </h3>
+            <hr>
+            <div dir="rtl" class="text-right">
+                <form method="post" action="/accounts/settings/personal/change/profile/" >
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>
+                                نام و نام خانوادگی
+                            </label>
+                            <input type="text" class="form-control" name="first_name" value="{{request.user.first_name}}" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>
+                                محل تحصیل
+                            </label>
+                            <input type="text" name="organization" class="form-control" value="{{profile.origin}}" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        ذخیره
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+            {% if email_settings %}
+            <h3 class="text-right mt-4">
+                آدرس ایمیل
+            </h3>
+            <hr>
+            <div dir="rtl" class="text-right">
+                <form method="post" action="/accounts/settings/email/change/" >
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label>
+                                آدرس ایمیل
+                            </label>
+                            <input type="text" dir="ltr" style="font-family:courier" class="form-control" name="email" value="{{request.user.email}}" >
+                        </div>
+                    </div>
+                    {% if email_settings_error %}
+                    <label class="control-label" style="color:red;" for="inputError">
+                        ایمیل وارد شده معتبر نیست.
+                    </label>
+                    <br>
+                    {% endif %}
+                    <label>
+                    با تغییر ایمیل خود حساب کاربری شما غیر فعال می شود و ایمیلی دیگر جهت فعال سازی مجدد حساب کاربری شما فرستاده می شود.
+                    </label>
+                    <label>
+                                از قراردادن فاصله یا هر کاراکتر دیگری غیر از آدرس ایمیل خود در فیلد خودداری کنید.
+                    </label>
+                    <br>
+                    <button type="submit" class="btn btn-primary">
+                        تغییر ایمیل
+                    </button>
+                </form>
+            </div>
+            <h3 class="text-right mt-4">
+                تنظیمات دریافت ایمیل
+            </h3>
+            <hr>
+            <div dir="rtl" class="text-right">
+                <form method="post" action="/accounts/settings/email/change/preferences/" >
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="EmailForContest">
+                                دریافت ایمیل برای مسابقات آینده
+                                &nbsp;
+                            </label>
+                            {% if profile.email_for_contest %}
+                                <input type="checkbox" class="form-check-input" name="EmailForContest" id="EmailForContest" checked>
+                            {% else %}
+                                <input type="checkbox" class="form-check-input" name="EmailForContest" id="EmailForContest">
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="EmailForNews">
+                                دریافت ایمیل برای اخبار کیوبیت
+                                &nbsp;
+                            </label>
+                            {% if profile.email_for_news %}
+                                <input type="checkbox" class="form-check-input" name="EmailForNews" id="EmailForNews" checked>
+                            {% else %}
+                                <input type="checkbox" class="form-check-input" name="EmailForNews" id="EmailForNews">
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        ذخیره
+                    </button>
+
+                </form>
+            </div>
+            {% endif %}
+            {% if password_settings %}
+            <h3 class="text-right mt-4">
+                تنظیمات گذرواژه
+            </h3>
+            <hr>
+            <div dir="rtl" class="text-right">
+                <form method="post" action="/accounts/settings/password/change/" >
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>
+                                گذرواژه فعلی
+                            </label>
+                            <input type="password" class="form-control" name="old_password" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>
+                                گذرواژه جدید
+                            </label>
+                            <input type="password" class="form-control" name="new_password" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>
+                                تکرار گذرواژه جدید
+                            </label>
+                            <input type="password" class="form-control" name="new_password_confirm" required>
+                        </div>
+                    </div>
+                    {% if match_password_error %}
+                    <label class="control-label" style="color:red;" for="inputError">
+                        گذرواژه های واردشده همخوانی ندارند.
+                    </label>
+                    <br>
+                    {% endif %}
+                    {% if old_password_error %}
+                    <label class="control-label" style="color:red;" for="inputError">
+                        گذرواژه فعلی اشتباه است.
+                    </label>
+                    <br>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">
+                        تغییر گذرواژه
+                    </button>
+
+                </form>
+            </div>
+            {% endif %}
+            {% if submissions_settings %}
+            {% if submissions %}
+            <h3 class="text-right mt-4">
+                ارسال ها
+            </h3>
+            <hr>
+            <div class="table-responsive" >
+                <table dir="rtl" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td align="center" style="vertical-align:middle;">
+                                شناسه
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                 نام مسئله
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                نام زیر مسئله
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                 زمان ارسال
+                                 (تاریخ)
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                زمان ارسال
+                                (ساعت)
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                پاسخ وارد شده
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                نتیجه داوری
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for submission in submissions %}
+                            <tr>
+                                <td align="center" style="vertical-align:middle;">{{submission.id}}</td>
+                                <td align="center" style="vertical-align:middle;"><a style="text-decoration:none;" href="/problem/{{submission.task.problem.code}}">
+                                    {{submission.task.problem.title}}
+                                </a></td>
+                                <td align="center" style="vertical-align:middle;">
+                                    {{submission.task.get_code_display}}
+                                </td>
+                                <td  align="center" style="vertical-align:middle;">
+                                    <span id="submission-{{submission.id}}-date"></span>
+                                </td>
+                                <td  align="center" style="vertical-align:middle;">
+                                    <span style="font-family:sans-serif">
+                                    {{submission.release_date|date:"H:i:s"}}
+                                    </span>
+                                </td>
+                                {% if submission.task.style == "text" %}
+                                    {% if submission.context == "" %}
+                                    <td align="center" style="vertical-align:middle;">
+                                        <span style="color:orange;">
+                                        ذخیره نشده
+                                        </span>
+                                    </td>
+                                    {% else %}
+                                    <td align="center" style="vertical-align:middle;font-family:courier">{{submission.context}}</td>
+                                    {% endif %}
+                                {% endif %}
+                                {% if submission.task.style == "coq" %}
+                                    <td align="center" style="vertical-align:middle;">
+                                        <a style="font-family:courier;text-decoration:none" href="/problem/{{submission.task.problem.code}}/submission/{{submission.id}}">
+                                        #{{submission.id}}
+                                        </a>
+                                    </td>
+                                {% endif %}
+                                {% if submission.verdict == 1 %}
+                                <td align="center" style="vertical-align:middle;">
+                                    <span style="color:green">
+                                        قابل قبول
+                                    </span>
+                                </td>
+                                {% elif submission.verdict == 0 %}
+                                <td align="center" style="vertical-align:middle;">
+                                    <span style="color:red">
+                                        نادرست
+                                    </span>
+                                </td>
+                                {% elif submission.verdict == 2 %}
+                                <td align="center" style="vertical-align:middle;">
+                                    <span style="color:gray"><a href="/problemset/queue/" style="color:inherit;text-decoration:none">
+                                        در صف داوری
+                                    </a></span>
+                                </td>
+                                {% elif submission.verdict == 3 %}
+                                <td align="center" style="vertical-align:middle;">
+                                    <span style="color:orange"><a href="/problemset/queue/" style="color:inherit;text-decoration:none">
+                                        در حال داوری
+                                    </a></span>
+                                </td>
+                                {% else %}
+                                <td align="center" style="vertical-align:middle;">
+                                    <span style="color:orange">
+                                        نامشخص
+                                    </span>
+                                </td>
+                                {% endif %}
+
+
+                            </tr>
+                            <script>
+                                document.getElementById("submission-{{submission.id}}-date").innerHTML = moment("{{submission.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{submission.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +moment("{{submission.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+                            </script>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <ul class="pagination justify-content-center border-success mb-4">
+                {% if current_page == "1" %}
+                    <li class="page-item disabled">
+                      <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/submissions/page/1">1</a></li>
+                    <li class="page-item"><a class="page-link">...</a></li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/submissions/page/{{last_page}}">{{last_page}}</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="/accounts/settings/submissions/page/{{next_page}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+                {% elif current_page == last_page %}
+                    <li class="page-item">
+                      <a class="page-link" href="/accounts/settings/submissions/page/{{previous_page}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/submissions/page/1">1</a></li>
+                    <li class="page-item"><a class="page-link">...</a></li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/submissions/page/{{last_page}}">{{last_page}}</a></li>
+                    <li class="page-item">
+                      <a class="page-link disabled" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="/accounts/settings/submissions/page/{{previous_page}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/submissions/page/1">1</a></li>
+                    <li class="page-item"><a class="page-link">...</a></li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/submissions/page/{{current_page}}">{{current_page}}</a></li>
+                    <li class="page-item"><a class="page-link">...</a></li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/submissions/page/{{last_page}}">{{last_page}}</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="/accounts/settings/submissions/page/{{next_page}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+                {% endif %}
+            </ul>
+            {% else %}
+            <h3 dir="rtl" class="text-right mt-4">
+                هیچ رکوردی برای نمایش وجود ندارد.
+            </h3>
+            {% endif %}
+            {% endif %}
+            {% if contests_settings %}
+            {% if contests %}
+            <h3 class="text-right mt-4">
+                مسابقات
+            </h3>
+            <hr>
+            <div id="past" class="table-responsive" >
+                <table dir="rtl" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td align="center" style="vertical-align:middle;">
+                                نام مسابقه
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                زمان شروع
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                زمان پایان
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                مدت مسابقه
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                تعداد
+                                <br>
+                                سوالات
+                            </td>
+                            <td align="center" style="vertical-align:middle;">
+                                تعداد
+                                <br>
+                                شرکت کنندگان
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for contest,details in contests %}
+                            <tr>
+                                <td align="center" style="vertical-align:middle;"><a style="text-decoration:none;" href="/contest/{{contest.code}}/">{{contest.title}}</a></td>
+                                <td  align="center" style="vertical-align:middle;">
+                                    <span id="date-{{contest.code}}-start">
+                                    </span>
+                                    <br>
+                                    <span>
+                                    ساعت
+                                    {{contest.date_start|date:"H:i"}}
+                                    </span>
+                                </td>
+                                <td align="center" style="vertical-align:middle;">
+                                    <span id="date-{{contest.code}}-end">
+                                    </span>
+                                    <br>
+                                    <span>
+                                    ساعت
+                                    {{contest.date_end|date:"H:i"}}
+                                    </span>
+                                </td>
+
+                                <td align="center" style="vertical-align:middle;"> <!-- Contest duration -->
+                                    <div data-reactroot>
+                                        <div style="display: inline-block;">
+                                            <span>{{details.length_minutes}}</span>
+                                            <br>
+                                            <span style="font-size:10px">
+                                            دقیقه
+                                            </span>
+                                        </div>
+                                        <div style="display: inline-block;"></div>
+                                        <div style="display: inline-block;">
+                                            <span>{{details.length_hours}}</span>
+                                            <br>
+                                            <span style="font-size:10px">
+                                            ساعت
+                                            </span>
+                                        </div>
+                                        <div style="display: inline-block;"></div>
+                                        <div style="display: inline-block;">
+                                            <span>{{details.length_days}}</span>
+                                            <br>
+                                            <span style="font-size:10px" >
+                                            روز
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td align="center" style="vertical-align:middle;">{{contest.problems.all.count}}</td>
+                                <td align="center" style="vertical-align:middle;">{{contest.participants.all.count}}</td>
+                            </tr>
+                            <script>
+                                document.getElementById("date-{{contest.code}}-start").innerHTML = moment("{{contest.date_start|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{contest.date_start|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +
+                                moment("{{contest.date_start|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+                                document.getElementById("date-{{contest.code}}-end").innerHTML = moment("{{contest.date_end|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " +  moment("{{contest.date_end|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +
+                                moment("{{contest.date_end|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+                            </script>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <ul class="pagination justify-content-center border-success mb-4">
+                {% if current_page == "1" %}
+                    <li class="page-item disabled">
+                      <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/contests/page/1">1</a></li>
+                    <li class="page-item"><a class="page-link">...</a></li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/contests/page/{{last_page}}">{{last_page}}</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="/accounts/settings/contests/page/{{next_page}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+                {% elif current_page == last_page %}
+                    <li class="page-item">
+                      <a class="page-link" href="/accounts/settings/contests/page/{{previous_page}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/contests/page/1">1</a></li>
+                    <li class="page-item"><a class="page-link">...</a></li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/contests/page/{{last_page}}">{{last_page}}</a></li>
+                    <li class="page-item">
+                      <a class="page-link disabled" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="/accounts/settings/contests/page/{{previous_page}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/contests/page/1">1</a></li>
+                    <li class="page-item"><a class="page-link">...</a></li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/contests/page/{{current_page}}">{{current_page}}</a></li>
+                    <li class="page-item"><a class="page-link">...</a></li>
+                    <li class="page-item"><a class="page-link" href="/accounts/settings/contests/page/{{last_page}}">{{last_page}}</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="/accounts/settings/contests/page/{{next_page}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </li>
+                {% endif %}
+            </ul>
+            {% else %}
+            <h3 dir="rtl" class="text-right mt-4">
+                هیچ رکوردی برای نمایش وجود ندارد.
+            </h3>
+            {% endif %}
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+            <h4 class="text-center mt-4"></h4>
+
+            <div class="list-group">
+                {% if personal_settings %}
+                <a class="list-group-item text-center active" href="/accounts/settings/personal/">
+                {% else %}
+                <a class="list-group-item text-center" href="/accounts/settings/personal/">
+                {% endif %}
+                    مشخصات فردی
+                </a>
+                {% if email_settings %}
+                <a class="list-group-item text-center active" href="/accounts/settings/email/">
+                {% else %}
+                <a class="list-group-item text-center" href="/accounts/settings/email/">
+                {% endif %}
+                    ایمیل
+                </a>
+                {% if password_settings %}
+                <a class="list-group-item text-center active" href="/accounts/settings/password/">
+                {% else %}
+                <a class="list-group-item text-center" href="/accounts/settings/password/">
+                {% endif %}
+                    گذرواژه
+                </a>
+                {% if submissions_settings %}
+                <a class="list-group-item text-center active" href="/accounts/settings/submissions/page/1/">
+                {% else %}
+                <a class="list-group-item text-center" href="/accounts/settings/submissions/page/1/">
+                {% endif %}
+                    پاسخ های ارسال شده
+                </a>
+                {% if contests_settings %}
+                <a class="list-group-item text-center active" href="/accounts/settings/contests/page/1/">
+                {% else %}
+                <a class="list-group-item text-center" href="/accounts/settings/contests/page/1/">
+                {% endif %}
+                    مسابقات شرکت کرده
+                </a>
+                <a class="list-group-item text-center" href="/accounts/profile/{{user.username}}/">
+                    پروفایل
+                </a>
+            </div>
+            <p></p>
+            {% comment %}
+            <ul class="nav nav-pills nav-justified flex-column">
+              <li class="nav-item">
+                {% if personal_settings %}
+                <a class="nav-link active" href="/accounts/settings/personal/">
+                {% else %}
+                <a class="nav-link" href="/accounts/settings/personal/">
+                {% endif %}
+                    مشخصات فردی
+                </a>
+              </li>
+              <li class="nav-item">
+                {% if email_settings %}
+                <a class="nav-link active" href="/accounts/settings/email/">
+                {% else %}
+                <a class="nav-link" href="/accounts/settings/email/">
+                {% endif %}
+                    ایمیل
+                </a>
+              </li>
+              <li class="nav-item">
+                {% if password_settings %}
+                <a class="nav-link active" href="/accounts/settings/password/">
+                {% else %}
+                <a class="nav-link" href="/accounts/settings/password/">
+                {% endif %}
+                    گذرواژه
+                </a>
+              </li>
+              <li  class="nav-item">
+                {% if submissions_settings %}
+                <a class="nav-link active" href="/accounts/settings/submissions/page/1/">
+                {% else %}
+                <a class="nav-link" href="/accounts/settings/submissions/page/1/">
+                {% endif %}
+                    پاسخ های ارسال شده
+                </a>
+              </li>
+              <li  class="nav-item">
+                {% if contests_settings %}
+                <a class="nav-link active" href="/accounts/settings/contests/page/1/">
+                {% else %}
+                <a class="nav-link" href="/accounts/settings/contests/page/1/">
+                {% endif %}
+                    مسابقات شرکت کرده
+                </a>
+              </li>
+              <li  class="nav-item">
+                <a class="nav-link" href="/accounts/profile/{{user.username}}/">
+                    پروفایل
+                </a>
+              </li>
+            </ul>
+            {% endcomment %}
+
+        </div>
+
+
+
+    </div>
+
+
+</main>
+
+{% if messages %}
+<script>
+     {% for message in messages %}
+        {% if message.tags == "success"%}
+            alert("اطلاعات با موفقیت تغییر کرد.");
+        {% endif %}
+        {% if message.tags == "error"%}
+            {% if message == "FILE"%}
+                alert("حجم فایل بیش از حد مجاز است.");
+            {% endif %}
+            {% if message == "MATCH" %}
+                alert("گذرواژه های وارد شده همخوانی ندارند.");
+            {% endif %}
+            {% if message == "OLD"%}
+                alert("گذرواژه فعلی اشتباه است.");
+            {% endif %}
+        {% endif %}
+     {% endfor %}
+</script>
+{% endif %}
+<script src="{% static 'blog/content/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script>
+    var username = "{{user.username}}";
+</script>
+<script src="{% static 'contest/js/notifications.js' %}"></script>
+</body>
+
+</html>
+

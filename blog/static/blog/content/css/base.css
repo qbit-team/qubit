@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'byekan';
+  src: url('/static/main/fonts/BYekan.ttf')  format("truetype"),
+       local('byekan');
+}
+html *
+{
+   /*font-size: 1em !important;
+   color: #000 !important;*/
+   font-family: byekan ; /*!important*/
+}

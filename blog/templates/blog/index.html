@@ -1,0 +1,117 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block navbar-title %}بلاگ رسمی کیوبیت{% endblock navbar-title%}
+{% block title %}Qbit - Blog{% endblock %}
+{% block page-css %}<link href="{% static 'blog/content/css/blog-home.css' %}" rel="stylesheet">
+{% endblock %}
+{% block page-script %}<script src="{% static 'main/calendar/jalali-moment.browser.js' %}"></script>{% endblock %}
+{% block container-type %}
+<div class="container">
+{% endblock container-type %}
+{% block content %}
+        <div class="col-md-8">
+
+        {% if blogs %}
+          <h1 class="my-4">
+            <small></small>
+          </h1>
+        {% for blog in blogs %}
+          <div dir="rtl" style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card mb-4 border-light">
+            {% comment %}<img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">{% endcomment %}
+
+            <div dir="rtl" class="card-body">
+                <a style="color:black;text-decoration:none" href="{% url 'blog:index' blog.id %}" ><h2 class="text-right card-title">{{ blog.title }}</h2></a>
+                <hr>
+                <div class="text-right card-text">
+
+                    {{ blog.summary | safe }}
+
+                </div>
+                {% comment %}
+                <a href="#" class="btn btn-primary pull-right ">
+                    اطلاعات بیشتر
+                &rarr;</a>
+                {% endcomment %}
+            </div>
+
+            <div data-toggle="tooltip" class="text-right card-footer text-muted">
+            پست شده در تاریخ
+            <span id="blog-{{blog.id}}-date"></span>
+            و
+            در ساعت
+            {{ blog.release_date|date:"H:i" }}
+            توسط
+            <a style="text-decoration:none;" href="/accounts/profile/{{blog.author.username}}">{{blog.author.first_name}}</a>
+            <script>
+                document.getElementById("blog-{{blog.id}}-date").innerHTML = moment("{{blog.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{blog.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +
+                moment("{{blog.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+            </script>
+            </div>
+          </div>
+        {% endfor %}
+          <ul class="pagination justify-content-center border-success mb-4">
+            {% if current_page == "1" and last_page == "1"%}
+                <li class="page-item disabled">
+                  <a class="page-link" href="">&larr; پست های قدیمی تر</a>
+                </li>
+                <li class="page-item disabled">
+                  <a class="page-link" href="">پست های جدید تر&rarr;</a>
+                </li>
+            {% else %}
+                {% if current_page == "1" %}
+                    <li class="page-item">
+                      <a class="page-link" href="{% url 'blog:page' previous_page %}">&larr; پست های قدیمی تر</a>
+                    </li>
+                    <li class="page-item disabled">
+                      <a class="page-link" href="">پست های جدید تر&rarr;</a>
+                    </li>
+                {% elif current_page == last_page %}
+                    <li class="page-item disabled">
+                      <a class="page-link" href="">&larr; پست های قدیمی تر</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="{% url 'blog:page' next_page %}">پست های جدید تر &rarr;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="{% url 'blog:page' previous_page %}">&larr; پست های قدیمی تر</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="{% url 'blog:page' next_page %}">پست های جدید تر &rarr;</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+
+          </ul>
+        {% else %}
+          <h1 dir="rtl" class="text-right my-4">
+            <small>
+            هیچ پستی برای نمایش وجود ندارد
+            </small>
+          </h1>
+        {% endif %}
+        </div>
+{% endblock %}
+{% block sidebar %}
+<div class="col-md-4">
+    <div style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card my-4 border-light">
+        <h5 class="text-right card-header">
+            بلاگ های مهم
+        </h5>
+        <div dir="rtl" class="text-right card-body">
+        {% if pinned_blogs %}
+            {% for pinned_blog in pinned_blogs %}
+                {% if not forloop.last %}
+                <a style="text-decoration:none;" href="{% url 'blog:index' pinned_blog.id %}">{{pinned_blog.title}}</a>
+                <hr>
+                {% else %}
+                <a style="text-decoration:none;" href="{% url 'blog:index' pinned_blog.id %}">{{pinned_blog.title}}</a>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+        هیچ پستی پین نشده است
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

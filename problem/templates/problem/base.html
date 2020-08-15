@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html style="font-family:&quot;byekan&quot;;mso-bidi-language:FA" lang="fa">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'main/content/index/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'blog/content/css/base.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    {% block page-css %}{% endblock %}
+    {% block page-script %}{% endblock %}
+
+  </head>
+
+  <body>
+
+<!-- ######################################################################################### -->
+    <nav dir="rtl" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top"> <!--style="background-color:#d1d1d1"-->
+        <a class="navbar-brand" href="">
+        {% block navbar-title %}{% endblock navbar-title%}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+        {% comment %}
+            <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        {% endcomment %}
+        {% if user.is_authenticated  %}
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+          </ul>
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item">
+              <a class="nav-link active" href="/accounts/profile/">
+                  {{user.first_name}}
+
+            عزیز خوش آمدید
+              </a>
+            </li>
+            {% comment %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+              </li>
+            {% endcomment %}
+            {% if user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link active" href="/admin">
+            مدیریت دیجانگو
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_logout' %}?next={{ request.path }}">
+              خروج
+              </a>
+            </li>
+
+        </ul>
+            {% else %}
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog">
+              بلاگ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/problemset">
+              سوالات
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/contest">
+              مسابقات
+              </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'accounts_login' %}?next={{ request.path }}">
+              ورود
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'main:accounts_register' %}?next={{ request.path }}">
+              ثبت نام
+              </a>
+            </li>
+
+        </ul>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+<!-- ############################################################################### -->
+    <div class="container-fluid">
+        {% comment %}
+        <p></p>
+        <ol dir="rtl" class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Library</a></li>
+          <li class="breadcrumb-item active">Data</li>
+        </ol>
+        {% endcomment %}
+      <div class="row">
+          {% block content %}{% endblock %}
+
+        <div class="col-md-3">
+            {% block sidebar %}{% endblock %}
+        {% comment %}
+          <!-- Categories Widget -->
+          <div class="card my-4">
+            <h5 class="card-header">Categories</h5>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-lg-6">
+                  <ul class="list-unstyled mb-0">
+                    <li>
+                      <a href="#">Web Design</a>
+                    </li>
+                    <li>
+                      <a href="#">HTML</a>
+                    </li>
+                    <li>
+                      <a href="#">Freebies</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-lg-6">
+                  <ul class="list-unstyled mb-0">
+                    <li>
+                      <a href="#">JavaScript</a>
+                    </li>
+                    <li>
+                      <a href="#">CSS</a>
+                    </li>
+                    <li>
+                      <a href="#">Tutorials</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side Widget -->
+          <div class="card my-4">
+            <h5 class="card-header">Side Widget</h5>
+            <div class="card-body">
+              You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
+            </div>
+          </div>
+        {% endcomment %}
+        </div>
+
+      </div><!-- row -->
+
+
+    </div><!-- conatiner -->
+    {% comment %}
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Qbit 2018</p>
+      </div>
+    </footer>
+    {% endcomment %}
+    <script src="{% static 'blog/content/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'blog/content/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+  </body>
+
+</html>

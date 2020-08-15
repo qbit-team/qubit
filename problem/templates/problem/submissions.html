@@ -1,0 +1,288 @@
+{% extends "main/base-contest.html" %}
+{% load static %}
+{% block navbar-title %} کیوبیت {% endblock navbar-title%}
+{% block title %}Qbit - Problem - {{ problem.title }} - ارسال ها{% endblock %}
+{% block page-css %}<link href="{% static 'blog/content/css/blog-home.css' %}" rel="stylesheet">{% endblock %}
+{% block page-script %}
+<script src="{% static 'main/calendar/jalali-moment.browser.js' %}"></script>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+{% if messages %}
+<script>
+     {% for message in messages %}
+        alert("{{message}}");
+     {% endfor %}
+</script>
+{% endif %}
+
+{% endblock %}
+{% block container-type %}
+<div class="container-fluid">
+{% endblock container-type %}
+{% block content %}
+<div class="col-md-9">
+
+        <h1 class="my-4">
+        <small></small>
+        </h1>
+
+        <div dir="rtl" style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card mb-4 border-light">
+            <h5 class="text-right card-header">
+                {{ problem.title }}
+                -
+                ارسال های پیشین
+            </h5>
+
+        <div dir="rtl" class="card-body">
+            <div class="text-right card-text">
+                <div class="table-responsive" >
+                    <table dir="rtl" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <td align="center" style="vertical-align:middle;">
+                                    شناسه
+                                </td>
+                                <td align="center" style="vertical-align:middle;">
+                                    نام زیر مسئله
+                                </td>
+                                <td align="center" style="vertical-align:middle;">
+                                     زمان ارسال
+                                     (تاریخ)
+                                </td>
+                                <td align="center" style="vertical-align:middle;">
+                                    زمان ارسال
+                                    (ساعت)
+                                </td>
+                                <td align="center" style="vertical-align:middle;">
+                                    پاسخ وارد شده
+                                </td>
+                                <td align="center" style="vertical-align:middle;">
+                                    وضعیت داوری
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for submission in submissions %}
+                                <tr>
+                                    <td align="center" style="vertical-align:middle;">{{submission.id}}</td>
+                                    <td align="center" style="vertical-align:middle;">
+                                        {{submission.task.get_code_display}}
+                                    </td>
+                                    <td  align="center" style="vertical-align:middle;">
+                                        <span id="submission-{{submission.id}}-date"></span>
+                                    </td>
+                                    <td  align="center" style="vertical-align:middle;">
+                                        <span style="font-family:sans-serif">
+                                        {{submission.release_date|date:"H:i:s"}}
+                                        </span>
+                                    </td>
+                                    {% if submission.task.style == "text" %}
+                                        {% if submission.context == "" %}
+                                        <td align="center" style="vertical-align:middle;">
+                                            <span style="color:orange;">
+                                            ذخیره نشده
+                                            </span>
+                                        </td>
+                                        {% else %}
+                                        <td align="center" style="vertical-align:middle;font-family:courier">{{submission.context}}</td>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if submission.task.style == "coq" %}
+                                        <td align="center" style="vertical-align:middle;">
+                                            <a style="font-family:courier;text-decoration:none" href="/problem/{{problem.code}}/submission/{{submission.id}}">
+                                            #{{submission.id}}
+                                            </a>
+                                        </td>
+                                    {% endif %}
+                                    {% if submission.verdict == 1 %}
+                                    <td align="center" style="vertical-align:middle;">
+                                        <span style="color:green">
+                                            قابل قبول
+                                        </span>
+                                    </td>
+                                    {% elif submission.verdict == 0 %}
+                                    <td align="center" style="vertical-align:middle;">
+                                        <span style="color:red">
+                                            نادرست
+                                        </span>
+                                    </td>
+                                    {% elif submission.verdict == 2 %}
+                                    <td align="center" style="vertical-align:middle;">
+                                        <span style="color:gray"><a href="/problemset/queue/" style="color:inherit;text-decoration:none">
+                                            در صف داوری
+                                        </a></span>
+                                    </td>
+                                    {% elif submission.verdict == 3 %}
+                                    <td align="center" style="vertical-align:middle;">
+                                        <span style="color:orange"><a href="/problemset/queue/" style="color:inherit;text-decoration:none">
+                                            در حال داوری
+                                        </a></span>
+                                    </td>
+                                    {% else %}
+                                    <td align="center" style="vertical-align:middle;">
+                                        <span style="color:orange">
+                                            نامشخص
+                                        </span>
+                                    </td>
+                                    {% endif %}
+
+
+                                </tr>
+                                <script>
+                                    document.getElementById("submission-{{submission.id}}-date").innerHTML = moment("{{submission.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{submission.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +moment("{{submission.release_date|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+                                </script>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+        </div>
+
+</div>
+{% endblock content%}
+{% block sidebar %}
+<div class="col-md-3">
+    <div dir="rtl" style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card my-4 border-light">
+    <h5 class="text-right card-header ">ارسال پاسخ</h5>
+    {% if not user.is_authenticated %}
+    <div class="text-right card-body">
+      برای ارسال پاسخ ابتدا وارد شوید.
+
+    </div>
+    {% else %}
+    <div class="card-body">
+        {% for subtask,verdict in subtasks %}
+        {% if verdict and subtask.style != "coq" %}
+             <p class="text-right"> زیر مساله {{ subtask.get_code_display }} : {{ subtask.score }} نمره
+            <br>
+            پاسخ:
+            {{ subtask.answer }}
+            </p>
+        {% endif %}
+        {% if verdict and subtask.style == "coq" %}
+             <p class="text-right"> زیر مساله {{ subtask.get_code_display }} : {{ subtask.score }} نمره
+            <br>
+            پاسخ:
+            <br>
+            لینک پاسخ شما در ارسال های پیشین شما قرار دارد.
+            </p>
+        {% endif %}
+        {% if forloop.last and problem_solved %}
+        <a  href="/problem/{{problem.code}}/" class="btn btn-info btn-block ">
+            مشاهده صورت سوال
+        </a>
+        {% endif %}
+        {% endfor %}
+        {% if not problem_solved %}
+        <form method="post" id="form-submission" action="/problem/{{problem.code}}/submit/">
+            {% csrf_token %}
+            <input type="hidden" name="submission_recaptcha" value="1">
+            <fieldset>
+                <div class="form-group">
+                    <select id="subtask-select" name="subtask-select" class="form-control" onchange="checkCoq(this)">
+                        <option value="" selected="" disabled="" hidden="">
+                            زیر مساله را انتخاب کنید.
+                        </option>
+                        {% for subtask,verdict in subtasks %}
+                            {% if not verdict %}
+                                {% if subtask.style != "coq" %}
+                                    <option value="{{subtask.code}}">
+                                    زیر مساله {{ subtask.get_code_display }} : {{ subtask.score }} نمره
+                                    </option>
+                                {% else %}
+                                    <option value="coq,{{subtask.code}}" >
+                                    زیر مساله {{ subtask.get_code_display }} : {{ subtask.score }} نمره
+                                    </option>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                <input class="form-control" style="display:none" placeholder="پاسخ را وارد کنید" name="javab" type="text"
+                 id="input-javab"
+                 required>
+                <a id="btn-to-submit-page" style="display:none" href="/problem/{{problem.code}}/coq/" class="btn btn-warning btn-block ">
+                    صفحه ارسال اثبات ها
+                </a>
+                </div>
+                <button id="btn-submit" style="display:none" type="submit" class="btn btn-success btn-block g-recaptcha" data-sitekey="6Lcti1cUAAAAAHX2kCm73scz2WdvDidOotJCtEQe" data-callback="onSubmit">
+                ارسال
+                </button>
+                <p></p>
+                <a  href="/problem/{{problem.code}}/" class="btn btn-info btn-block ">
+                    مشاهده صورت سوال
+                </a>
+                <script>
+
+                    function checkCoq(e){
+                        var res = document.getElementById("subtask-select").value.split(",");
+                        if (res[0] == "coq"){
+                            document.getElementById("input-javab").style.display = "none";
+                            document.getElementById("btn-to-submit-page").style.display = "block";
+                            document.getElementById("btn-submit").style.display = "none";
+                        } else {
+                            document.getElementById("input-javab").style.display = "block";
+                            document.getElementById("btn-to-submit-page").style.display = "none";
+                            document.getElementById("btn-submit").style.display = "block";
+                        }
+                    }
+                </script>
+                <script type="text/javascript">
+                  var onSubmit = function(response) {
+                    if(document.getElementById("input-javab").value == ""){
+                        grecaptcha.reset();
+                    } else {
+                    document.getElementById("form-submission").submit();
+                    }
+                  };
+                </script>
+            </fieldset>
+        </form>
+        {% endif %}
+    {% comment %}
+    {% for subtask,verdict in subtasks %}
+
+      زیر مساله {{ subtask.get_code_display }} : {{ subtask.score }} نمره
+        {% if verdict %}
+            <br>
+            پاسخ:
+            {{ subtask.answer }}
+        {% else %}
+                <form method="post" id="form-{{subtask.code}}" action="/problem/submit/{{problem.code}}/{{subtask.code}}/">
+                    {% csrf_token %}
+                    <input type="hidden" name="submission_recaptcha" value="1">
+                    <fieldset>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="پاسخ را وارد کنید" name="javab" type="text"
+                             id="input-{{subtask.code}}"
+                             required>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block g-recaptcha" data-sitekey="6Lcti1cUAAAAAHX2kCm73scz2WdvDidOotJCtEQe" data-callback="onSubmit">
+                        ارسال
+                        </button>
+                            <script type="text/javascript">
+                              var onSubmit = function(response) {
+                                if(document.getElementById("input-{{subtask.code}}").value == ""){
+                                    grecaptcha.reset();
+                                } else {
+                                document.getElementById("form-{{subtask.code}}").submit(); // send response to your backend service
+                                }
+                              };
+                            </script>
+                    </fieldset>
+                </form>
+        {% endif %}
+            <br>
+    {% endfor %}
+    {% endcomment %}
+    </div>
+    {% endif %}
+    </div>
+
+    {{ problem.parent_contest.html_div }}
+</div>
+{% endblock sidebar%}

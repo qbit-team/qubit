@@ -1,0 +1,147 @@
+{% extends "main/base-contest.html" %}
+{% load static %}
+{% block navbar-title %} کیوبیت {% endblock navbar-title%}
+{% block title %}Qbit - Contests {% endblock %}
+{% block page-css %}<link href="{% static 'blog/content/css/blog-home.css' %}" rel="stylesheet">{% endblock %}
+{% block container-type %}
+<div class="container-fluid">
+{% endblock container-type %}
+{% block page-script %}
+<script src="{% static 'main/calendar/jalali-moment.browser.js' %}"></script>
+{% endblock %}
+{% block content %}
+
+<script>
+    function stc(pe)
+    {
+        pe*=120;
+        return 'hsl('+pe+',100%,50%)';
+    }
+    window.addEventListener( "pageshow", function ( event ) {
+  var historyTraversal = event.persisted ||
+                         ( typeof window.performance != "undefined" &&
+                              window.performance.navigation.type === 2 );
+  if ( historyTraversal ) {
+    window.location.reload();
+  }
+
+
+
+});
+</script>
+
+<div class="col-md-9">
+
+    <h1 class="my-4">
+    <small></small>
+    </h1>
+    <div style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card mb-4 border-light">
+        <h5 class="text-right card-header">
+            فهرست سوالات
+        </h5>
+        <div class="text-right card-body">
+            <div class="table-responsive" >
+                <table dir="rtl" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <!--<td align="center">
+                            شناسه
+                            </td>-->
+                            <td align="center"  style="vertical-align:middle;">
+                                نام مسئله
+                            </td>
+                            <td align="center"  style="vertical-align:middle;">
+                            نمره سوال
+                            </td>
+                            <td align="center"  style="vertical-align:middle;">
+                            امتیاز
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for problem,score in problems %}
+                            <tr>
+                                <!--<td align="center">{{problem.id}}</td>-->
+                                <td align="center"  style="vertical-align:middle;"><a style="text-decoration:none;" href="/problem/{{problem.code}}">{{problem.title}}</a></td>
+                                {% if score == "-" %}
+                                    <td align="center"  style="vertical-align:middle;">{{problem.maxscore}}</td>
+                                    <td align="center"  style="vertical-align:middle;">0</td>
+                                {% else %}
+                                    <td align="center"  style="vertical-align:middle;">{{problem.maxscore}}</td>
+                                    <td align="center" id="td_{{problem.code}}"  style="vertical-align:middle;">{{score}}</td>
+                                <script>
+                                    document.getElementById("td_{{problem.code}}").style.backgroundColor=stc({{score}}/{{problem.maxscore}});
+                                </script>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if notifications %}
+    <div style="box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -moz-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75); -webkit-box-shadow: 0px 3px 13px -1px rgba(0,0,0,0.75);" class="card mb-4 border-light">
+        <h5 class="text-right card-header">
+            اطلاعیه ها
+        </h5>
+        <div class="text-right card-body">
+            <div class="table-responsive" >
+                <table dir="rtl" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td align="center"  style="vertical-align:middle;">
+                                تیتر اطلاعیه
+                            </td>
+                            <td align="center"  style="vertical-align:middle;">
+                                متن اطلاعیه
+                            </td>
+                            <td align="center"  style="vertical-align:middle;">
+                                زمان
+                            </td>
+                            <td align="center"  style="vertical-align:middle;">
+                                نویسنده
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for notification in notifications %}
+                            <tr>
+                                <td align="center"  style="vertical-align:middle;">
+                                    {{notification.title}}
+                                </td>
+                                <td align="center"  style="vertical-align:middle;">
+                                    {{notification.context}}
+                                </td>
+                                <td  align="center" style="vertical-align:middle;">
+                                    <span id="notify-{{notification.id}}"></span>
+                                    <br>
+                                    <span>
+                                    ساعت
+                                    {{notification.release|date:"H:i"}}
+                                    </span>
+                                </td>
+                                <td align="center"  style="vertical-align:middle;">
+                                    {{notification.author.first_name}}
+                                </td>
+                                <script>
+                                    document.getElementById("notify-{{notification.id}}").innerHTML = moment("{{notification.release|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("DD") + " " + moment("{{notification.release|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("MMMM") + " " +moment("{{notification.release|date:'Y/m/d'}}", "YYYY/MM/DD").locale("fa").format("YYYY");
+                                </script>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block sidebar%}
+<div class="col-md-3">
+    {{ contest.html_div }}
+</div>
+{% endblock %}
